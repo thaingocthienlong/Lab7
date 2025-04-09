@@ -38,6 +38,8 @@ const upload = multer({
 
 // Routes
 router.get('/', csrfProtection, fileController.getIndex);
+
+
 router.get('/folder/:path(.*)', csrfProtection, fileController.getFolder);
 router.post('/create-folder', csrfProtection, fileController.createFolder);
 router.post('/create-file', csrfProtection, fileController.createFile);

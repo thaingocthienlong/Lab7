@@ -69,6 +69,11 @@ app.get('/', authMiddleware.isAuthenticated, (req, res) => {
   res.redirect('/files');
 });
 
+app.get('/folder/:path(.*)', (req, res) => {
+  // Redirect old /folder/* URLs to the new /files/folder/* format
+  res.redirect(`/files/folder/${req.params.path}`);
+});
+
 // Error handling - 404
 app.use((req, res, next) => {
   res.status(404).render('error', { 

@@ -48,7 +48,9 @@
             </div>
             <div class="col-6">
                 <div class="dropdown text-right">
-                    Welcome <a class="dropdown-toggle text-primary" data-toggle="dropdown"><%= user.name %></a>
+                    Welcome <a class="dropdown-toggle text-primary" data-toggle="dropdown">
+                        <%= user.name %>
+                    </a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="#">
                             <i class="fas fa-info-circle"></i>
@@ -64,123 +66,143 @@
         <!-- Breadcrumbs for navigation -->
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <% for (let i = 0; i < breadcrumbs.length; i++) { %>
-                <% if (i === breadcrumbs.length - 1) { %>
-                    <li class="breadcrumb-item active"><%= breadcrumbs[i].name %></li>
-                <% } else { %>
-                    <li class="breadcrumb-item">
-                        <a href="/folder/<%= breadcrumbs[i].path %>"><%= breadcrumbs[i].name %></a>                    </li>
-                <% } %>
-            <% } %>
+            <% for (let i=0; i < breadcrumbs.length; i++) { %>
+                <% if (i===breadcrumbs.length - 1) { %>
+                    <li class="breadcrumb-item active">
+                        <%= breadcrumbs[i].name %>
+                    </li>
+                    <% } else { %>
+                        <li class="breadcrumb-item">
+                            <a href="/folder/<%= breadcrumbs[i].path %>">
+                                <%= breadcrumbs[i].name %>
+                            </a>
+                        </li>
+                        <% } %>
+                            <% } %>
         </ol>
 
         <!-- Success/Error Messages -->
-        <% if (success && success.length > 0) { %>
+        <% if (success && success.length> 0) { %>
             <div class="alert alert-success alert-dismissible fade show">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <%= success %>
             </div>
-        <% } %>
-        <% if (error && error.length > 0) { %>
-            <div class="alert alert-danger alert-dismissible fade show">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <%= error %>
-            </div>
-        <% } %>
-
-        <!-- Search Box -->
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text">
-                    <span class="fa fa-search"></span>
-                </span>
-            </div>
-            <input type="text" class="form-control" placeholder="Search" id="search-input">
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="btn-group my-3">
-            <button type="button" class="btn btn-light border" data-toggle="modal" data-target="#new-folder-dialog">
-                <i class="fas fa-folder-plus"></i> New folder
-            </button>
-            <button type="button" class="btn btn-light border" data-toggle="modal" data-target="#new-file-dialog">
-                <i class="fas fa-file"></i> Create text file
-            </button>
-        </div>
-
-        <!-- Files and Folders Table -->
-        <table class="table table-hover border">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Size</th>
-                    <th>Last modified</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (files.length === 0) { %>
-                    <tr>
-                        <td colspan="5" class="text-center">No files or folders found</td>
-                    </tr>
-                <% } else { %>
-                    <% files.forEach(function(file) { %>
-                        <tr>
-                            <td>
-                                <% if (file.isDirectory) { %>
-                                    <i class="fa fa-folder"></i>
-                                    <a href="/folder/<%= file.path %>"><%= file.name %></a>
-                                <% } else { %>
-                                    <i class="fas fa-file"></i>
-                                    <a href="/files/<%= user.id %>/<%= file.path %>" class="file-link" data-path="<%= file.path %>">
-                                        <%= file.name %>
-                                    </a>
-                                <% } %>
-                            </td>
-                            <td><%= file.type %></td>
-                            <td><%= file.isDirectory ? '-' : formatFileSize(file.size) %></td>
-                            <td><%= formatDate(file.lastModified) %></td>
-                            <td>
-                                <span>
-                                    <i class="fa fa-download action" data-path="<%= file.path %>" 
-                                       data-type="<%= file.isDirectory ? 'folder' : 'file' %>"></i>
-                                </span>
-                                <span>
-                                    <i class="fa fa-edit action" data-path="<%= file.path %>" 
-                                       data-name="<%= file.name %>" data-toggle="modal" data-target="#rename-dialog"></i>
-                                </span>
-                                <span>
-                                    <i class="fa fa-trash action" data-path="<%= file.path %>" 
-                                       data-name="<%= file.name %>" data-toggle="modal" data-target="#confirm-delete"></i>
-                                </span>
-                            </td>
-                        </tr>
-                    <% }); %>
-                <% } %>
-            </tbody>
-        </table>
-
-        <!-- File Upload Section -->
-        <div class="border rounded mb-3 mt-5 p-3">
-            <h4>File upload</h4>
-            <form id="upload-form">
-                <input type="hidden" name="currentPath" value="<%= currentPath %>">
-                <div class="form-group">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFile">
-                        <label class="custom-file-label" for="customFile">Choose file</label>
+            <% } %>
+                <% if (error && error.length> 0) { %>
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <%= error %>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="progress" style="height:5px; display: none;">
-                        <div class="progress-bar bg-success" style="width:0%; height:5px"></div>
-                    </div>
-                </div>
-                <p class="small">Users can only upload files with a maximum size of 20 MB. Executable files (*.exe, *.msi, *.sh) are not allowed.</p>
-                <button type="button" class="btn btn-success px-5" onclick="document.getElementById('upload-form').dispatchEvent(new Event('submit'))">Upload</button>
-            </form>
-        </div>
+                    <% } %>
+
+                        <!-- Search Box -->
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <span class="fa fa-search"></span>
+                                </span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Search" id="search-input">
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="btn-group my-3">
+                            <button type="button" class="btn btn-light border" data-toggle="modal"
+                                data-target="#new-folder-dialog">
+                                <i class="fas fa-folder-plus"></i> New folder
+                            </button>
+                            <button type="button" class="btn btn-light border" data-toggle="modal"
+                                data-target="#new-file-dialog">
+                                <i class="fas fa-file"></i> Create text file
+                            </button>
+                        </div>
+
+                        <!-- Files and Folders Table -->
+                        <table class="table table-hover border">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th>Last modified</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (files.length===0) { %>
+                                    <tr>
+                                        <td colspan="5" class="text-center">No files or folders found</td>
+                                    </tr>
+                                    <% } else { %>
+                                        <% files.forEach(function(file) { %>
+                                            <tr>
+                                                <td>
+                                                    <% if (file.isDirectory) { %>
+                                                        <i class="fa fa-folder"></i>
+                                                        <a href="/files/folder/<%= file.path %>">
+                                                            <%= file.name %>
+                                                        </a>
+                                                        <% } else { %>
+                                                            <i class="fas fa-file"></i>
+                                                            <a href="/files/<%= user.id %>/<%= file.path %>"
+                                                                class="file-link" data-path="<%= file.path %>">
+                                                                <%= file.name %>
+                                                            </a>
+                                                            <% } %>
+                                                </td>
+                                                <td>
+                                                    <%= file.type %>
+                                                </td>
+                                                <td>
+                                                    <%= file.isDirectory ? '-' : formatFileSize(file.size) %>
+                                                </td>
+                                                <td>
+                                                    <%= formatDate(file.lastModified) %>
+                                                </td>
+                                                <td>
+                                                    <span>
+                                                        <i class="fa fa-download action" data-path="<%= file.path %>"
+                                                            data-type="<%= file.isDirectory ? 'folder' : 'file' %>"></i>
+                                                    </span>
+                                                    <span>
+                                                        <i class="fa fa-edit action" data-path="<%= file.path %>"
+                                                            data-name="<%= file.name %>" data-toggle="modal"
+                                                            data-target="#rename-dialog"></i>
+                                                    </span>
+                                                    <span>
+                                                        <i class="fa fa-trash action" data-path="<%= file.path %>"
+                                                            data-name="<%= file.name %>" data-toggle="modal"
+                                                            data-target="#confirm-delete"></i>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+                                                <% } %>
+                            </tbody>
+                        </table>
+
+                        <!-- File Upload Section -->
+                        <div class="border rounded mb-3 mt-5 p-3">
+                            <h4>File upload</h4>
+                            <form id="upload-form">
+                                <input type="hidden" name="currentPath" value="<%= currentPath %>">
+                                <div class="form-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="customFile">
+                                        <label class="custom-file-label" for="customFile">Choose file</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="progress" style="height:5px; display: none;">
+                                        <div class="progress-bar bg-success" style="width:0%; height:5px"></div>
+                                    </div>
+                                </div>
+                                <p class="small">Users can only upload files with a maximum size of 20 MB. Executable
+                                    files (*.exe, *.msi, *.sh) are not allowed.</p>
+                                <button type="button" class="btn btn-success px-5"
+                                    onclick="document.getElementById('upload-form').dispatchEvent(new Event('submit'))">Upload</button>
+                            </form>
+                        </div>
     </div>
 
     <!-- Modal Dialogs -->
@@ -192,13 +214,14 @@
                     <h4 class="modal-title">Create New Folder</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <form action="/create-folder" method="POST">
+                <form action="/files/create-folder" method="POST">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <input type="hidden" name="currentPath" value="<%= currentPath %>">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="folderName">Folder Name</label>
-                            <input type="text" class="form-control" id="folderName" name="folderName" placeholder="Enter folder name" required>
+                            <input type="text" class="form-control" id="folderName" name="folderName"
+                                placeholder="Enter folder name" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -224,11 +247,13 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="fileName">File Name</label>
-                            <input type="text" class="form-control" id="fileName" name="fileName" placeholder="Enter file name" required>
+                            <input type="text" class="form-control" id="fileName" name="fileName"
+                                placeholder="Enter file name" required>
                         </div>
                         <div class="form-group">
                             <label for="fileContent">Content</label>
-                            <textarea class="form-control" id="fileContent" name="fileContent" rows="10" placeholder="Enter file content"></textarea>
+                            <textarea class="form-control" id="fileContent" name="fileContent" rows="10"
+                                placeholder="Enter file content"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -292,7 +317,7 @@
     <!-- Helper JavaScript -->
     <script>
         // Add the following code if you want the name of the file appear on select
-        $(".custom-file-input").on("change", function() {
+        $(".custom-file-input").on("change", function () {
             var fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
@@ -316,7 +341,7 @@
         }
 
         // Dynamic data for modals
-        $(document).on('click', '.fa-edit', function() {
+        $(document).on('click', '.fa-edit', function () {
             const path = $(this).data('path');
             const name = $(this).data('name');
             $('#rename-item-path').val(path);
@@ -324,7 +349,7 @@
             $('#rename-new-name').val(name);
         });
 
-        $(document).on('click', '.fa-trash', function() {
+        $(document).on('click', '.fa-trash', function () {
             const path = $(this).data('path');
             const name = $(this).data('name');
             $('#delete-item-path').val(path);
@@ -335,9 +360,10 @@
         $(document).on('click', '.fa-download', function() {
             const path = $(this).data('path');
             const type = $(this).data('type');
-            window.location.href = `/download/${type}/${path}`;
-        });
+            window.location.href = `/files/download/${type}/${path}`;  // Add the /files prefix
+          });
     </script>
     <script src="/js/fileManager.js"></script>
 </body>
+
 </html>

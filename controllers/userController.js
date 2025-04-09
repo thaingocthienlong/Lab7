@@ -130,14 +130,6 @@ exports.postLogin = async (req, res) => {
   }
 };
 
-// Also update getLogin to properly check session
-exports.getLogin = (req, res) => {
-  res.render('login', { 
-    csrfToken: req.csrfToken(),
-    error: req.flash('error')
-  });
-};
-
 exports.logout = (req, res) => {
   // Clear session
   req.session.destroy();

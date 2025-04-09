@@ -187,7 +187,8 @@ exports.createFolder = async (req, res) => {
     // Validate folder name
     if (!folderName || folderName.includes('/') || folderName.includes('\\')) {
       req.flash('error', 'Invalid folder name');
-      return res.redirect(currentPath ? `/folder/${currentPath}` : '/');
+      return res.redirect(currentPath ? `/files/folder/${currentPath}` : '/files');
+
     }
     
     // Create the new folder
@@ -204,7 +205,8 @@ exports.createFolder = async (req, res) => {
     }
     
     // Redirect back to current folder
-    res.redirect(currentPath ? `/folder/${currentPath}` : '/');
+    res.redirect(currentPath ? `/files/folder/${currentPath}` : '/files');
+
   } catch (error) {
     console.error('Error creating folder:', error);
     req.flash('error', 'Error creating folder');
@@ -220,7 +222,8 @@ exports.createFile = async (req, res) => {
     // Validate file name
     if (!fileName || fileName.includes('/') || fileName.includes('\\')) {
       req.flash('error', 'Invalid file name');
-      return res.redirect(currentPath ? `/folder/${currentPath}` : '/');
+      return res.redirect(currentPath ? `/files/folder/${currentPath}` : '/files');
+
     }
     
     // Create the new file
@@ -237,7 +240,8 @@ exports.createFile = async (req, res) => {
     }
     
     // Redirect back to current folder
-    res.redirect(currentPath ? `/folder/${currentPath}` : '/');
+    res.redirect(currentPath ? `/files/folder/${currentPath}` : '/files');
+
   } catch (error) {
     console.error('Error creating file:', error);
     req.flash('error', 'Error creating file');
@@ -301,7 +305,8 @@ exports.renameItem = async (req, res) => {
     // Validate new name
     if (!newName || newName.includes('/') || newName.includes('\\')) {
       req.flash('error', 'Invalid name');
-      return res.redirect(currentPath ? `/folder/${currentPath}` : '/');
+      return res.redirect(currentPath ? `/files/folder/${currentPath}` : '/files');
+
     }
     
     // Get current item path
@@ -321,7 +326,8 @@ exports.renameItem = async (req, res) => {
     }
     
     // Redirect back to current folder
-    res.redirect(currentPath ? `/folder/${currentPath}` : '/');
+    res.redirect(currentPath ? `/files/folder/${currentPath}` : '/files');
+
   } catch (error) {
     console.error('Error renaming item:', error);
     req.flash('error', 'Error renaming item');
@@ -346,7 +352,8 @@ exports.deleteItem = async (req, res) => {
     }
     
     // Redirect back to current folder
-    res.redirect(currentPath ? `/folder/${currentPath}` : '/');
+    res.redirect(currentPath ? `/files/folder/${currentPath}` : '/files');
+
   } catch (error) {
     console.error('Error deleting item:', error);
     req.flash('error', 'Error deleting item');
