@@ -38,13 +38,13 @@ const upload = multer({
 
 // Routes
 router.get('/', csrfProtection, fileController.getIndex);
-router.get('/folder/:path(*)', csrfProtection, fileController.getFolder);
+router.get('/folder/:path(.*)', csrfProtection, fileController.getFolder);
 router.post('/create-folder', csrfProtection, fileController.createFolder);
 router.post('/create-file', csrfProtection, fileController.createFile);
 router.post('/upload', upload.single('file'), fileController.uploadFile);
 router.post('/rename', csrfProtection, fileController.renameItem);
 router.post('/delete', csrfProtection, fileController.deleteItem);
-router.get('/download/:type/:path(*)', fileController.downloadItem);
+router.get('/download/:type/:path(.*)', fileController.downloadItem);
 router.get('/search', fileController.searchItems);
 
 module.exports = router;
