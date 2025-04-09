@@ -9,7 +9,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 const csrfProtection = csrf({ cookie: true });
 
 // Login routes - very important to NOT apply isAuthenticated here
-router.get('/login', csrfProtection, userController.getLogin);
+router.get('/login', csrfProtection, authMiddleware.redirectIfLoggedIn, userController.getLogin);
 router.post('/login', csrfProtection, userController.postLogin);
 
 // Register routes

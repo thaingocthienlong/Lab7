@@ -13,11 +13,12 @@ require('dotenv').config();
 // Initialize database connection
 require('./config/database');
 
-// Import routes
-const userRoutes = require('./routes/userRoutes');
-
 // Import middleware
 const authMiddleware = require('./middleware/authMiddleware');
+
+// Import routes
+const userRoutes = require('./routes/userRoutes');
+const fileRoutes = require('./routes/fileRoutes');
 
 // Create Express app instance
 const app = express();
@@ -61,10 +62,11 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/user', userRoutes);
+app.use('/files', authMiddleware.isAuthenticated, fileRoutes);
 
-// Default route temporarily redirecting to login
-app.get('/', (req, res) => {
-  res.redirect('/user/login');
+// Default route - redirect to files if authenticated, otherwise middleware redirects to login
+app.get('/', authMiddleware.isAuthenticated, (req, res) => {
+  res.redirect('/files');
 });
 
 // Error handling - 404

@@ -80,13 +80,9 @@ exports.postLogin = async (req, res) => {
   try {
     const { email, password, remember } = req.body;
     
-    console.log("Login attempt:", email); // Debug logging
-    
     // Find user by email
     const User = require('../models/userModel');
     const user = await User.findOne({ where: { email } });
-    
-    console.log("User found:", user ? "Yes" : "No"); // Debug logging
     
     if (!user) {
       req.flash('error', 'Invalid username or password');
@@ -100,8 +96,6 @@ exports.postLogin = async (req, res) => {
     const bcrypt = require('bcrypt');
     const passwordMatch = await bcrypt.compare(password, user.password);
     
-    console.log("Password match:", passwordMatch ? "Yes" : "No"); // Debug logging
-    
     if (!passwordMatch) {
       req.flash('error', 'Invalid username or password');
       return res.render('login', { 
@@ -114,8 +108,6 @@ exports.postLogin = async (req, res) => {
     req.session.userId = user.id;
     req.session.userName = user.name;
     
-    console.log("Session set, user ID:", user.id); // Debug logging
-    
     // Set remember-me cookie if requested
     if (remember) {
       // Set a persistent cookie (30 days)
@@ -126,9 +118,8 @@ exports.postLogin = async (req, res) => {
     }
     
     // Redirect to home
-    const returnTo = req.session.returnTo || '/';
+    const returnTo = req.session.returnTo || '/files';  // Change default to /files
     delete req.session.returnTo;
-    console.log("Redirecting to:", returnTo); // Debug logging
     res.redirect(returnTo);
   } catch (error) {
     console.error("Login error:", error);
@@ -137,6 +128,14 @@ exports.postLogin = async (req, res) => {
       error: 'Login failed. Please try again.' 
     });
   }
+};
+
+// Also update getLogin to properly check session
+exports.getLogin = (req, res) => {
+  res.render('login', { 
+    csrfToken: req.csrfToken(),
+    error: req.flash('error')
+  });
 };
 
 exports.logout = (req, res) => {
